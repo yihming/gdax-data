@@ -1,2 +1,5 @@
 # Ignore .pyc files
 *.pyc
+
+# Ignore local mysql connection config file
+dbconn.json
