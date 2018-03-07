@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Generation Time: Mar 04, 2018 at 09:33 PM
+-- Generation Time: Mar 05, 2018 at 12:05 AM
 -- Server version: 5.7.21-0ubuntu0.17.10.1
 -- PHP Version: 7.1.11-0ubuntu0.17.10.1
 
@@ -33,7 +33,8 @@ CREATE TABLE `history` (
   `open` float NOT NULL,
   `close` float NOT NULL,
   `volume` float NOT NULL,
-  `datetime` datetime NOT NULL
+  `utc_datetime` datetime NOT NULL,
+  `mt_datetime` datetime NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 --
