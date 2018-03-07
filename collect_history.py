@@ -1,5 +1,5 @@
 import MySQLdb as M
-import gdax, time
+import gdax, time, json
 from datetime import datetime
 
 class myWebsocketClient(gdax.WebsocketClient):
@@ -23,10 +23,11 @@ class myWebsocketClient(gdax.WebsocketClient):
 
 
 def create_websocket_client():
-    db = M.connect(host = "localhost",
-                   user = "root",
-                   passwd = "871121",
-                   db = "gdax")
+    config = json.load(open('dbconn.json'))["mysql"]
+    db = M.connect(host = config["host"],
+                   user = config["user"],
+                   passwd = config["password"],
+                   db = config["gdax"])
     ws_client = myWebsocketClient(db)
     return(ws_client)
 
