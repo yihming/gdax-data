@@ -1,48 +1,53 @@
 import MySQLdb as M
-import gdax, time, json
+import gdax, time, json, os
 from datetime import datetime
-import pytz
+from dateutil import tz
 
-def write_to_db(rates, db):
+def write_to_db(rates, db, fp = None):
     cur = db.cursor()
-    logging("  Start to write to database...")
+    if fp is not None:
+        logging("  Start to write to database...\n", fp)
     try:
         for entry in rates:
             cur.execute(
                 """INSERT INTO history (timestamp, low, high, open, close, volume, utc_datetime, mt_datetime)
                 VALUES (%s, %s, %s, %s, %s, %s, %s, %s)""",
                 (entry[0], entry[1], entry[2], entry[3], entry[4], entry[5],
-                 datetime.utcfromtimestamp(entry[0]).strftime("%Y-%m-%d %H:%M:%S"),
-                 datetime.fromtimestamp(entry[0]).strftime("%Y-%m-%d %H:%M:%S")))
+                 timestamp_to_utcstr(entry[0]),
+                 timestamp_to_localstr(entry[0])))
         db.commit()
     except:
         db.rollback()
 
-    logging("  Write Finished!")
+    if fp is not None:
+        logging("  Write Finished!\n", file = "log")
+        
 
 def logging(str, file = None):
-    if file is None:
-        print(str)
+    if file is not None:
+        file.write(str)
+    else:
+        print(str)        
 
-## Needed
-def utcstr_to_timestamp(utcstr):
-    dt_utc = datetime.strptime(utcstr, "%Y-%m-%dT%H:%M:%S")
-    dt_utc = dt_utc.replace(tzinfo = pytz.utc)
-    ts = time.mktime(dt_utc.timetuple())
+def utcstr_to_timestamp(ut_cstr):
+    dt_utc = datetime.strptime(ut_cstr, "%Y-%m-%d %H:%M:%S")
+    dt_utc = dt_utc.replace(tzinfo = tz.tzutc())
+    dt_local = dt_utc.astimezone(tz.tzlocal())
+    ts = time.mktime(dt_local.timetuple())
     return int(ts)
 
-## Needed
+
 def timestamp_to_utcstr(ts):
-    dt_utc = datetime.utcfromtimestamp(ts).strftime("%Y-%m-%dT%H:%M:%S")
-    return dt_utc
+    utc_str = datetime.utcfromtimestamp(ts).strftime("%Y-%m-%d %H:%M:%S")
+    return utc_str
 
-def dtstr_to_timestamp(dt):
-    ts = time.mktime(datetime.strptime(dt, "%Y-%m-%d %H:%M:%S").timetuple())
+def localstr_to_timestamp(local_str):
+    ts = time.mktime(datetime.strptime(local_str, "%Y-%m-%d %H:%M:%S").timetuple())
     return int(ts)
 
-def timestamp_to_dtstr(ts):
-    dt = datetime.fromtimestamp(ts).strftime("%Y-%m-%d %H:%M:%S")
-    return dt
+def timestamp_to_localstr(ts):
+    local_str = datetime.fromtimestamp(ts).strftime("%Y-%m-%d %H:%M:%S")
+    return local_str
         
 def main():
     pc = gdax.PublicClient()
@@ -51,31 +56,45 @@ def main():
                    passwd = "871121",
                    db = "gdax")
 
-    von = "2018-03-05T00:00:00"
-    bis = "2018-03-06T23:59:00"
+    if os.path.exists("./log"):
+        try:
+            os.remove("./log")
+        except OSError:
+            pass
+            
+    fp = open("./log", "w")
 
-    ts_start = utcstr_to_timestamp(von)
-    ts_end = utcstr_to_timestamp(bis)
+    # UTC Datetime
+    von = "2018-02-05 00:00:00"
+    bis = "2018-03-07 00:00:00"
+
+    start_ts = utcstr_to_timestamp(von)
+    end_ts = utcstr_to_timestamp(bis)
     h = 4
 
-    cur_ts = ts_start
-    while cur_ts != ts_end:
-        if cur_ts + 4 * 3600 >= ts_end:
-            next_ts = ts_end
+    cnt = 0
+    cur_ts = start_ts
+    while cur_ts < end_ts:
+        cnt = cnt + 1
+        if cur_ts + 4 * 60 > end_ts:
+            next_ts = end_ts
         else:
             next_ts = cur_ts + 4 * 3600
 
         cur_str = timestamp_to_utcstr(cur_ts)
         next_str = timestamp_to_utcstr(next_ts)
         rs = pc.get_product_historic_rates('BTC-USD', start = cur_str, end = next_str, granularity = 60)
-        logging("Fetch data from " + cur_str + " to " + next_str)
-        write_to_db(rates, db)
-        logging("--------------------------------")
-        
-        cur_ts = next_ts + 60
-     
+        logging("Fetch data from " + cur_str + " to " + next_str + "\n", file = fp)
+        logging("  size = " + str(len(rs)) + "\n", file = fp)
+        write_to_db(rs, db)
+        logging("--------------------------------\n", file = fp)
+        print("Round " + str(cnt) + " finished with " + str(len(rs)) + " entries.")
 
+        cur_ts = next_ts
+        time.sleep(10)
+    
     db.close()
+    fp.close()
     
 
 if __name__ == "__main__":
