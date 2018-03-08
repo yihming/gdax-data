@@ -4,3 +4,6 @@
 # Ignore log files
 log
 
+# Ignore Database Config file
+dbconn.json
+
