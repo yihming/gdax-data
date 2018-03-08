@@ -2,7 +2,7 @@
     "mysql": {
 	"host": "localhost",
 	"user": "root",
-	"password": "871121",
+	"password": "your-password",
 	"database": "gdax"
     }
 }

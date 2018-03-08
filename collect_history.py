@@ -51,10 +51,11 @@ def timestamp_to_localstr(ts):
         
 def main():
     pc = gdax.PublicClient()
-    db = M.connect(host = "localhost",
-                   user = "root",
-                   passwd = "871121",
-                   db = "gdax")
+    config = json.load(open('dbconn.json'))["mysql"]
+    db = M.connect(host = config["host"],
+                   user = config["user"],
+                   passwd = config["password"],
+                   db = config["database"])
 
     if os.path.exists("./log"):
         try:
@@ -66,7 +67,7 @@ def main():
 
     # UTC Datetime
     von = "2018-02-05 00:00:00"
-    bis = "2018-03-07 00:00:00"
+    bis = "2018-02-06 00:00:00"
 
     start_ts = utcstr_to_timestamp(von)
     end_ts = utcstr_to_timestamp(bis)
