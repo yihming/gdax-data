@@ -2,35 +2,6 @@ import MySQLdb as M
 import gdax, time, json
 from datetime import datetime
 
-class myWebsocketClient(gdax.WebsocketClient):
-    def __init__(self, db_conn):
-        gdax.WebsocketClient.__init__(self)
-        self.mysql_conn = db_conn
-        print("-- MySQL connection is successfully created!--")
-        
-    def on_open(self):
-        self.url = "wss://ws-feed.gdax.com/"
-        self.products = ["BTC-USD"]
-        self.message_count = 0
-
-    def on_message(self, msg):
-        self.message_count += 1
-        if 'price' in msg and 'type' in msg:
-            print("Message type: ", msg["type"], "\t@ {:.3f}".format(float(msg["price"])))
-
-    def on_close(self):
-        print("-- Goodbye! --")
-
-
-def create_websocket_client():
-    config = json.load(open('dbconn.json'))["mysql"]
-    db = M.connect(host = config["host"],
-                   user = config["user"],
-                   passwd = config["password"],
-                   db = config["gdax"])
-    ws_client = myWebsocketClient(db)
-    return(ws_client)
-
 def write_to_db(rates, db):
     cur = db.cursor()
     print("  Start to write to database...")
