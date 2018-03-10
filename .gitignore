@@ -7,3 +7,5 @@ log
 # Ignore Database Config file
 dbconn.json
 
+# Ignore some huge dataset
+btc-usd.sql
