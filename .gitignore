@@ -8,4 +8,4 @@ log
 dbconn.json
 
 # Ignore some huge dataset
-btc-usd.sql
+btc_usd.sql
