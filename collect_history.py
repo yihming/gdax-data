@@ -66,8 +66,8 @@ def main():
     fp = open("./log", "w")
 
     # UTC Datetime
-    von = "2018-02-05 00:00:00"
-    bis = "2018-02-06 00:00:00"
+    von = "2016-01-01 00:00:00"
+    bis = "2018-03-10 00:00:00"
 
     start_ts = utcstr_to_timestamp(von)
     end_ts = utcstr_to_timestamp(bis)
@@ -76,6 +76,7 @@ def main():
     cnt = 0
     cur_ts = start_ts
     while cur_ts < end_ts:
+        time.sleep(10)
         cnt = cnt + 1
         if cur_ts + 4 * 60 > end_ts:
             next_ts = end_ts
@@ -85,14 +86,15 @@ def main():
         cur_str = timestamp_to_utcstr(cur_ts)
         next_str = timestamp_to_utcstr(next_ts)
         rs = pc.get_product_historic_rates('BTC-USD', start = cur_str, end = next_str, granularity = 60)
-        logging("Fetch data from " + cur_str + " to " + next_str + "\n", file = fp)
-        logging("  size = " + str(len(rs)) + "\n", file = fp)
+        if len(rs) < 240:
+            logging("Data from " + cur_str + " to " + next_str + "\n", file = fp)
+            logging("  size = " + str(len(rs)) + "\n", file = fp)
+            logging("--------------------------------\n", file = fp)
         write_to_db(rs, db)
-        logging("--------------------------------\n", file = fp)
-        print("Round " + str(cnt) + " finished with " + str(len(rs)) + " entries.")
+        print("From " + cur_str + " to " + next_str + ": " + str(len(rs)) + " entries.")
 
         cur_ts = next_ts
-        time.sleep(10)
+
     
     db.close()
     fp.close()
