@@ -4,9 +4,12 @@ from datetime import datetime
 from dateutil import tz
 
 def write_to_db(rates, db, fp = None):
+    if len(rates) == 0:
+        return
+
     cur = db.cursor()
-    if fp is not None:
-        logging("  Start to write to database...\n", fp)
+#    if fp is not None:
+#        logging("  Start to write to database...\n", fp)
     try:
         for entry in rates:
             cur.execute(
@@ -19,8 +22,8 @@ def write_to_db(rates, db, fp = None):
     except:
         db.rollback()
 
-    if fp is not None:
-        logging("  Write Finished!\n", file = "log")
+#    if fp is not None:
+#        logging("  Write Finished!\n", fp)
         
 
 def logging(str, file = None):
@@ -66,8 +69,8 @@ def main():
     fp = open("./log", "w")
 
     # UTC Datetime
-    von = "2016-01-01 00:00:00"
-    bis = "2018-03-10 00:00:00"
+    von = "2016-08-21 00:00:00"
+    bis = "2018-03-15 00:00:00"
 
     start_ts = utcstr_to_timestamp(von)
     end_ts = utcstr_to_timestamp(bis)
@@ -85,12 +88,12 @@ def main():
 
         cur_str = timestamp_to_utcstr(cur_ts)
         next_str = timestamp_to_utcstr(next_ts)
-        rs = pc.get_product_historic_rates('BTC-USD', start = cur_str, end = next_str, granularity = 60)
-        if len(rs) < 240:
+        rs = pc.get_product_historic_rates('LTC-USD', start = cur_str, end = next_str, granularity = 60)
+        if len(rs) < 240 and len(rs) > 0:
             logging("Data from " + cur_str + " to " + next_str + "\n", file = fp)
             logging("  size = " + str(len(rs)) + "\n", file = fp)
             logging("--------------------------------\n", file = fp)
-        write_to_db(rs, db)
+        write_to_db(rs, db, fp)
         print("From " + cur_str + " to " + next_str + ": " + str(len(rs)) + " entries.")
 
         cur_ts = next_ts
