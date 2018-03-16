@@ -68,8 +68,9 @@ def main():
             
     fp = open("./log", "w")
 
+    product = 'BTC-USD'
     # UTC Datetime
-    von = "2016-08-21 00:00:00"
+    von = "2018-03-14 12:00:00"
     bis = "2018-03-15 00:00:00"
 
     start_ts = utcstr_to_timestamp(von)
@@ -79,8 +80,9 @@ def main():
     cnt = 0
     cur_ts = start_ts
     while cur_ts < end_ts:
-        time.sleep(10)
         cnt = cnt + 1
+        if cnt > 1:
+            time.sleep(10)
         if cur_ts + 4 * 60 > end_ts:
             next_ts = end_ts
         else:
@@ -88,7 +90,7 @@ def main():
 
         cur_str = timestamp_to_utcstr(cur_ts)
         next_str = timestamp_to_utcstr(next_ts)
-        rs = pc.get_product_historic_rates('LTC-USD', start = cur_str, end = next_str, granularity = 60)
+        rs = pc.get_product_historic_rates(product, start = cur_str, end = next_str, granularity = 60)
         if len(rs) < 240 and len(rs) > 0:
             logging("Data from " + cur_str + " to " + next_str + "\n", file = fp)
             logging("  size = " + str(len(rs)) + "\n", file = fp)
