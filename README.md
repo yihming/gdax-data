@@ -24,7 +24,7 @@ sudo apt install git ssh
    ```
    Include /etc/phpmyadmin/apache.conf
    ```
-   Save and close the file; then type `sudo service apache2 restart` to restart Apache2.
+     Save and close the file; then type `sudo service apache2 restart` to restart Apache2.
    - Open any web browser, type `http://localhost/phpmyadmin` to open PHPMyAdmin.
 
 3. Create Database and Table for the Project:
@@ -41,7 +41,7 @@ sudo apt install git ssh
    ```
    sudo apt install python-setuptools python-dev build-essential python-pip ipython
    ```
-   And type `sudo pip install --upgrade pip` to upgrade pip to the latest version.
+     And type `sudo pip install --upgrade pip` to upgrade pip to the latest version.
    - Install the following packages via pip:
    ```
    sudo pip install gdax mysqlclient python-dateutil
@@ -51,7 +51,7 @@ sudo apt install git ssh
 ```
 python collect_history.py
 ```
-To change the product, start and end datetime for the collection:
+   To change the product, start and end datetime for the collection:
    - Open "collect_history.py" file; look for function "main()".
    - In the line `product = 'BTC-USD'`, change the value of `product` to the product you are interested.
    - Change the value of `von` (start datetime) and `bis` (end datetime) using ISO 8601 datetime format, and using UTC time zone.
