@@ -58,12 +58,12 @@ This installation guide works only for Ubuntu Linux 17.04 / 17.10:
    ```
    CREATE USER 'yihming'@'localhost' IDENTIFIED WITH mysql_native_password BY 'password' PASSWORD EXPIRE NEVER;
    ```
-   In the command, you have create a user with name **yihming** at host **localhost**. You can change the user name, and change **localhost** to **%** to allow remote access. Moreover, change **password** to your own password.
+   In the command, you have create a user with name `yihming` at host `localhost`. You can change the user name, and change `localhost` to `%` to allow remote access. Moreover, change `password` to your own password.
    - Type the following command to assign all privileges to this user:
    ```
    GRANT ALL on *.* TO 'yihming'@'localhost';
    ```
-   Note that you should change **yihming** and **localhost** to your own setting above.
+   Note that you should change `yihming` and `localhost` to your own setting above.
    - When finished, type `\q` to exit MySQL shell.
 
 4. Create Database and Table for the Project:
@@ -72,8 +72,12 @@ This installation guide works only for Ubuntu Linux 17.04 / 17.10:
    - Now you should see a table "history" created inside the database "gdax", with no entry but several fields set.
 
 5. Set up the database connection config file in the repository:
-   - In the repository, type `cp dbconn.json.example dbconn.json` to create a Database config file from the example.
-   - Open "dbconn.json", replace "your-password" by your own password to MySQL; save and close.
+   - In the repository, type
+     ```
+     cp dbconn.json.example dbconn.json
+     ```
+     to create a Database config file from the example.
+   - Open *"dbconn.json"* file, replace `root` by your user name in MySQL, and `your-password` by its password to MySQL; save and close.
 
 6. Install necessary python packages:
    - Install python develop tools:
