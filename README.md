@@ -24,7 +24,7 @@ This installation guide works only for Ubuntu Linux 17.04 / 17.10:
      sudo apt install apache2
      ```
 
-   - Type the following command to install MySQL (*This works for MySQL version before 5.7*):
+   - Type the following command to install MySQL (**This works for MySQL version before 5.7**):
 
      ```
      sudo apt install mysql-server mysql-client libmysqlclient-dev
@@ -58,12 +58,12 @@ This installation guide works only for Ubuntu Linux 17.04 / 17.10:
    ```
    CREATE USER 'yihming'@'localhost' IDENTIFIED WITH mysql_native_password BY 'password' PASSWORD EXPIRE NEVER;
    ```
-   In the command, you have create a user with name 'yihming' at host 'localhost'. You can change the user name, and change 'localhost' to '%' to allow remote access. Moreover, change 'password' to your own password.
+   In the command, you have create a user with name **yihming** at host **localhost**. You can change the user name, and change **localhost** to **%** to allow remote access. Moreover, change **password** to your own password.
    - Type the following command to assign all privileges to this user:
    ```
    GRANT ALL on *.* TO 'yihming'@'localhost';
    ```
-   Note that you should change 'yihming' and 'localhost' to your own setting above.
+   Note that you should change **yihming** and **localhost** to your own setting above.
    - When finished, type `\q` to exit MySQL shell.
 
 4. Create Database and Table for the Project:
