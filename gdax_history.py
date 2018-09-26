@@ -13,7 +13,7 @@ def write_to_db(rates, db, fp = None):
     try:
         for entry in rates:
             cur.execute(
-                """INSERT INTO history (timestamp, low, high, open, close, volume, utc_datetime, mt_datetime)
+                """INSERT INTO gdax_history (timestamp, low, high, open, close, volume, utc_datetime, mt_datetime)
                 VALUES (%s, %s, %s, %s, %s, %s, %s, %s)""",
                 (entry[0], entry[1], entry[2], entry[3], entry[4], entry[5],
                  timestamp_to_utcstr(entry[0]),
